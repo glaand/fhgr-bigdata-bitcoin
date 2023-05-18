@@ -13,4 +13,5 @@ apptainer shell  \
 	--writable \
 	--mount type=bind,source=$RAW_DATA,dst=/raw-data \
 	--mount type=bind,source=$PROCESSED_DATA,dst=/processed-data \
+	--mount type=bind,source=/scratch,dst=/scratch \
 	container/sandbox rusty

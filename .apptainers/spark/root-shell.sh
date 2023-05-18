@@ -13,5 +13,6 @@ apptainer shell  \
 	--writable \
 	--mount type=bind,source=$PROCESSED_DATA,dst=/processed-data \
 	--mount type=bind,source=$REDUCED_DATA,dst=/reduced-data \
+	--mount type=bind,source=/scratch,dst=/scratch \
 	container/sandbox \
 	spark
