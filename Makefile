@@ -1,24 +1,30 @@
 rsync:
 	bash scripts/rsync.sh
 
-compile-parser:
-	bash scripts/compile_fast_dat_parser.sh
+# Spark apptainer commands
+spark/build:
+	bash .apptainers/spark/build.sh
+spark/start:
+	bash .apptainers/spark/start.sh
+spark/stop:
+	apptainer instance stop spark
+spark/spark-shell:
+	bash .apptainers/spark/spark-shell.sh
+spark/shell:
+	bash .apptainers/spark/shell.sh
+spark/root-shell:
+	apptainer instance stop spark
+	bash .apptainers/spark/root-shell.sh
 
-build-spark:
-	bash apptainers/spark-cluster/build.sh
-
-start-spark:
-	bash apptainers/spark-cluster/start.sh
-
-stop-spark:
-	apptainer instance stop spark-cluster
-
-spark-shell:
-	bash apptainers/spark-cluster/spark-shell.sh
-
-shell:
-	bash apptainers/spark-cluster/shell.sh
-
-root-shell:
-	bash apptainers/spark-cluster/root-shell.sh
-
+# Rusty-blockparser apptainer commands
+rusty/build:
+        bash .apptainers/rusty/build.sh
+rusty/start:
+        bash .apptainers/rusty/start.sh
+rusty/stop:
+        apptainer instance stop rusty
+rusty/shell:
+        bash .apptainers/rusty/shell.sh
+rusty/root-shell:
+	apptainer instance stop rusty
+        bash .apptainers/rusty/root-shell.sh
