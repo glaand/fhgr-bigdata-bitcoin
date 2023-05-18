@@ -1,10 +1,6 @@
 #!/bin/bash
 cd /scratch/fhgr-bigdata-bitcoin/apptainers/spark-cluster
-set -e
-mkdir -p $(pwd)/container/sandbox
-mkdir -p $(pwd)/container/cache
-mkdir -p $(pwd)/container/tmp
 export APPTAINER_CACHEDIR=$(pwd)/container/cache
 export APPTAINER_TMPDIR=$(pwd)/container/tmp
 export TMPDIR=$(pwd)/container/tmp
-apptainer build --force --fakeroot --nv --sandbox container/sandbox docker://apache/spark-py
+apptainer shell --contain --fakeroot --dns=10.0.96.48,10.0.96.49 --net --network=fakeroot --writable --mount type=bind,source=$(pwd)/data,dst=/data container/sandbox spark-cluster
