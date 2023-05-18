@@ -1,7 +1,8 @@
 # fhgr-bigdata-bitcoin
 ## Commands
 In order to be able to execute the following commands, you need to change directory to `/scratch/fhgr-bigdata-bitcoin`.
-ATTENTION: If you want to install new software which requires root permissions, you need to stop the apptainers and enter it via root-shell. the root-shell cannot start the apptainer as a backgroudn service, therefore once you finished installing your requirements, exit the shell and start the apptainer afterwards with the `/start` make command.
+
+**ATTENTION**: If you want to install new software which requires root permissions, you need to stop the apptainers and enter it via root-shell. the root-shell cannot start the apptainer as a backgroudn service, therefore once you finished installing your requirements, exit the shell and start the apptainer afterwards with the `/start` make command.
 
 ### General commands
 Rsync bitcoin node data to the iridium server
