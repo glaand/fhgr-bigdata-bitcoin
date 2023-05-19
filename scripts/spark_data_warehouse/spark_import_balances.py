@@ -1,7 +1,7 @@
 import os
 from pyspark.sql import SparkSession
 
-balances_file = "/processed-data/rusty-dump/unspent.csv"
+balances_file = "/processed-data/rusty-dump/balances.csv"
 
 # Check if file exists
 if not os.path.exists(balances_file):
