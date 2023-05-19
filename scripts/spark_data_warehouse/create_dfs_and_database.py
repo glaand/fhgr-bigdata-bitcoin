@@ -1,9 +1,17 @@
 import os
+from os.path import abspath
 from pyspark.sql import SparkSession
 
 # Create SparkSession
-spark = SparkSession.builder \
-    .appName("Load Bitcoin Blockchain unspent to Spark SQL") \
+# warehouse_location points to the default location for managed databases and tables
+warehouse_location = abspath('spark-warehouse')
+
+# Create spark session with hive enabled
+spark = SparkSession \
+    .builder \
+    .appName("SparkByExamples.com") \
+    .config("spark.sql.warehouse.dir", warehouse_location) \
+    .enableHiveSupport() \
     .getOrCreate()
 
 # paths
@@ -15,6 +23,10 @@ blocks_file = f"/processed-data/rusty-dump/blocks-{block_range}.csv"
 transactions_file = f"/processed-data/rusty-dump/transactions-{block_range}.csv"
 tx_out_file = f"/processed-data/rusty-dump/tx_in-{block_range}.csv"
 tx_in_file = f"/processed-data/rusty-dump/tx_out-{block_range}.csv"
+
+# check if files exist
+if os.path.exists(unspent_file) and os.path.exists(balances_file) and os.path.exists(blocks_file) and os.path.exists(transactions_file) and os.path.exists(tx_out_file) and os.path.exists(tx_in_file):
+    print("All files exist")
 
 # create dfs
 unspent=spark.read.option("delimiter", ";").option("header", True).csv(unspent_file)
@@ -28,13 +40,13 @@ tx_in=spark.read.option("delimiter", ";").option("header", True).csv(tx_in_file)
 spark.sql("CREATE SCHEMA IF NOT EXISTS btc_blockchain")
 spark.sql("USE btc_blockchain")
 
-# save to database
-unspent.saveAsTable("unspent", mode="overwrite")
-balances.saveAsTable("balances", mode="overwrite")
-blocks.saveAsTable("blocks", mode="overwrite")
-transactions.saveAsTable("transactions", mode="overwrite")
-tx_out.saveAsTable("tx_out", mode="overwrite")
-tx_in.saveAsTable("tx_in", mode="overwrite")
+# create Hive internal table
+unspent.write.mode('overwrite').saveAsTable("unspent")
+balances.write.mode('overwrite').saveAsTable("balances")
+blocks.write.mode('overwrite').saveAsTable("blocks")
+transactions.write.mode('overwrite').saveAsTable("transactions")
+tx_out.write.mode('overwrite').saveAsTable("tx_out")
+tx_in.write.mode('overwrite').saveAsTable("tx_in")
 
 # add keys
 spark.sql(f"ALTER TABLE blocks ADD CONSTRAINT `pk_blocks` PRIMARY KEY (`id`)")
@@ -50,3 +62,11 @@ spark.sql(f"CREATE INDEX `idx_address` ON tx_out (`address`)")
 # flag spent tx outputs
 spark.sql(f"UPDATE tx_out o, tx_in i SET o.unspent = FALSE " \
         f"WHERE o.txid = i.hashPrevOut AND o.indexOut = i.indexPrevOut")
+
+# read dfs from Hive tables
+unspent=spark.read.table("unspent")
+balances=spark.read.table("balances")
+blocks=spark.read.table("blocks")
+transactions=spark.read.table("transactions")
+tx_out=spark.read.table("tx_out")
+tx_in=spark.read.table("tx_in")
