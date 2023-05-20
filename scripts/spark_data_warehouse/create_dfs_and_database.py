@@ -4,6 +4,7 @@
 import os
 from os.path import abspath
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
 
 # Create SparkSession
 # warehouse_location points to the default location for managed databases and tables
@@ -24,8 +25,8 @@ unspent_file = f"/processed-data/rusty-dump/unspent-{block_range}.csv"
 balances_file = f"/processed-data/rusty-dump/balances-{block_range}.csv"
 blocks_file = f"/processed-data/rusty-dump/blocks-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
 transactions_file = f"/processed-data/rusty-dump/transactions-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
-tx_out_file = f"/processed-data/rusty-dump/tx_in-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
-tx_in_file = f"/processed-data/rusty-dump/tx_out-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+tx_out_file = f"/processed-data/rusty-dump/tx_out-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+tx_in_file = f"/processed-data/rusty-dump/tx_in-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
 
 # check if files exist
 if os.path.exists(unspent_file) and os.path.exists(balances_file) and os.path.exists(blocks_file) and os.path.exists(transactions_file) and os.path.exists(tx_out_file) and os.path.exists(tx_in_file):
@@ -50,20 +51,20 @@ blocks.write.mode('overwrite').saveAsTable("blocks")
 transactions.write.mode('overwrite').saveAsTable("transactions")
 tx_out.write.mode('overwrite').saveAsTable("tx_out")
 tx_in.write.mode('overwrite').saveAsTable("tx_in")
-
-spark.sql(f"CREATE INDEX `idx_txid` ON transactions (`txid`)")
-spark.sql(f"CREATE INDEX `idx_hashPrevOut_indexPrevOut` ON tx_in (`hashPrevOut`, `indexPrevOut`)")
-spark.sql(f"CREATE INDEX `idx_txid_indexOut` ON tx_out (`txid`, `indexOut`)")
-spark.sql(f"CREATE INDEX `idx_address` ON tx_out (`address`)")
-
-# flag spent tx outputs
-spark.sql(f"UPDATE tx_out o, tx_in i SET o.unspent = FALSE " \
-        f"WHERE o.txid = i.hashPrevOut AND o.indexOut = i.indexPrevOut")
-
+  
 # read dfs from Hive tables
-unspent=spark.read.table("unspent")
-balances=spark.read.table("balances")
-blocks=spark.read.table("blocks")
-transactions=spark.read.table("transactions")
-tx_out=spark.read.table("tx_out")
-tx_in=spark.read.table("tx_in")
+unspent_df=spark.read.table("unspent")
+balances_df=spark.read.table("balances")
+blocks_df=spark.read.table("blocks")
+transactions_df=spark.read.table("transactions")
+tx_out_df=spark.read.table("tx_out")
+tx_in_df=spark.read.table("tx_in")
+
+# Join the 'tx_out' and 'tx_in' DataFrames based on the conditions
+joined_df = tx_out_df.join(tx_in_df, (tx_out_df.txid == tx_in_df.hashPrevOut) & (tx_out_df.indexOut == tx_in_df.indexPrevOut), "inner")
+
+# Update the 'unspent' column to FALSE
+updated_df = joined_df.withColumn("unspent", col("unspent").cast("boolean").otherwise(False))
+
+# Select the required columns and overwrite the 'tx_out' DataFrame
+tx_out_df = updated_df.select("txid", "hashPrevOut", "indexPrevOut", "scriptSig", "sequence", "unspent")
