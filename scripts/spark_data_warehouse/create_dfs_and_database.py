@@ -52,7 +52,7 @@ transactions.write.mode('overwrite').saveAsTable("transactions")
 tx_out.write.mode('overwrite').saveAsTable("tx_out")
 tx_in.write.mode('overwrite').saveAsTable("tx_in")
   
-# read dfs from Hive tables
+# read dfs from Hive tables (Can also be used after successful import to load data to df)
 unspent_df=spark.read.table("unspent")
 balances_df=spark.read.table("balances")
 blocks_df=spark.read.table("blocks")
