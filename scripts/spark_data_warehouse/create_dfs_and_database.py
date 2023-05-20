@@ -62,16 +62,20 @@ tx_in_df=spark.read.table("tx_in")
 
 # Create unspent column directly in df (wont be saved in database)
 # Join the 'tx_out' and 'tx_in' DataFrames based on the conditions
-tx_out_updated_df = tx_out_df.withColumn('unspent', col('txid').isNotNull())
 
-tx_out_updated_df = tx_out_updated_df.alias('o').join(
+tx_out_updated_df = tx_out_df.alias('o').join(
     tx_in_df.alias('i'),
     (col('o.txid') == col('i.hashPrevOut')) & (col('o.indexOut') == col('i.indexPrevOut')),
     'left_outer'
-).withColumn('unspent', ~col('i.txid').isNull())
-
-tx_out_updated_df.show()
-
+).select(
+    'o.txid',
+    'o.indexOut',
+    'o.height',
+    'o.value',
+    'o.scriptPubKey',
+    'o.address',
+    when(col('i.txid').isNull(), True).otherwise(False).alias('unspent')
+)
 
 # save table permanent and load to df again
 tx_out_updated_df.write.mode('overwrite').saveAsTable("btc_blockchain.tx_out")
