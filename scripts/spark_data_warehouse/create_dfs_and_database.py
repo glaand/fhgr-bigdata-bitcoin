@@ -60,6 +60,30 @@ transactions_df=spark.read.table("transactions")
 tx_out_df=spark.read.table("tx_out")
 tx_in_df=spark.read.table("tx_in")
 
+# Register the DataFrame as temporary views
+tx_out_df.createOrReplaceTempView("tx_out")
+tx_in_df.createOrReplaceTempView("tx_in")
+
+# Create a new table with the updated values
+updated_tx_out = spark.sql('''
+    SELECT tx_out.txid, tx_out.hashPrevOut, tx_out.indexPrevOut, tx_out.scriptSig, tx_out.sequence,
+        CASE WHEN tx_out.txid = tx_out.hashPrevOut AND tx_out.indexOut = tx_in.indexPrevOut
+             THEN FALSE
+             ELSE TRUE
+        END AS unspent
+    FROM tx_out
+    LEFT JOIN tx_in ON tx_out.txid = tx_in.hashPrevOut AND tx_out.indexOut = tx_in.indexPrevOut
+''')
+
+# Drop the original table
+spark.sql("DROP TABLE IF EXISTS tx_out")
+
+# Create a new table with the updated values
+updated_tx_out.createOrReplaceTempView("tx_out")
+spark.sql("CREATE TABLE tx_out AS SELECT * FROM updated_tx_out")
+
+'''
+# Create unspent column directly in df (wont be saved in database)
 # Join the 'tx_out' and 'tx_in' DataFrames based on the conditions
 joined_df = tx_out_df.join(tx_in_df, (tx_out_df.txid == tx_in_df.hashPrevOut) & (tx_out_df.indexOut == tx_in_df.indexPrevOut), "inner")
 
@@ -68,3 +92,4 @@ updated_df = joined_df.withColumn("unspent", col("unspent").cast("boolean").othe
 
 # Select the required columns and overwrite the 'tx_out' DataFrame
 tx_out_df = updated_df.select("txid", "hashPrevOut", "indexPrevOut", "scriptSig", "sequence", "unspent")
+'''
