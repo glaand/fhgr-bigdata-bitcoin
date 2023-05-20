@@ -62,7 +62,6 @@ tx_in_df=spark.read.table("tx_in")
 
 # Create unspent column directly in df (wont be saved in database)
 # Join the 'tx_out' and 'tx_in' DataFrames based on the conditions
-
 tx_out_updated_df = tx_out_df.withColumn('unspent', col('txid').isNotNull())
 
 tx_out_updated_df = tx_out_updated_df.alias('o').join(
