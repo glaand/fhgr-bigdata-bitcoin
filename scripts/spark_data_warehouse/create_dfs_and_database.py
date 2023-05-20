@@ -34,10 +34,10 @@ if os.path.exists(unspent_file) and os.path.exists(balances_file) and os.path.ex
 # create dfs
 unspent=spark.read.option("delimiter", ";").option("header", True).csv(unspent_file)
 balances=spark.read.option("delimiter", ";").option("header", True).csv(balances_file)
-blocks=spark.read.option("delimiter", ";").option("header", False).csv(blocks_file)
-transactions=spark.read.option("delimiter", ";").option("header", False).csv(transactions_file)
-tx_out=spark.read.option("delimiter", ";").option("header", False).csv(tx_out_file)
-tx_in=spark.read.option("delimiter", ";").option("header", False).csv(tx_in_file)
+blocks=spark.read.option("delimiter", ";").option("header", True).csv(blocks_file)
+transactions=spark.read.option("delimiter", ";").option("header", True).csv(transactions_file)
+tx_out=spark.read.option("delimiter", ";").option("header", True).csv(tx_out_file)
+tx_in=spark.read.option("delimiter", ";").option("header", True).csv(tx_in_file)
 
 # create database
 spark.sql("CREATE SCHEMA IF NOT EXISTS btc_blockchain")
