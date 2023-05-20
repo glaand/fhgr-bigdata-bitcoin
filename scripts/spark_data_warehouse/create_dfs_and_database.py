@@ -1,3 +1,6 @@
+# To use this script just paste it to the pyspark shell and run the code
+# Or execute like this in bash: spark-submit create_dfs_and_database.py
+
 import os
 from os.path import abspath
 from pyspark.sql import SparkSession
