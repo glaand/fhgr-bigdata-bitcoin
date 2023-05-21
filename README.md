@@ -65,3 +65,20 @@ Start local-folder apptainer as root and enters it bounded to your shell (Not ru
 ```
 make spark/root-shell
 ```
+
+## Blockchain data import
+Following steps need to be done in order to have a working bitcoin blockchain data warehouse (hive table database) in apache spark (pyspark).
+
+### Rusty-blockparser data processing
+First its necessary to transform the raw blockchain data coming from a bitcoin full node.
+We used rusty-blockparser for that to create several csv files containing human readable files with all the data from the bitcoin blockchain.
+The script is available here: [./scripts/rusty-blockparser-export.sh](rusty-blockparser-export.sh).
+
+### CSV import to apache spark
+After the csv files are created, we can import the data to apache spark using pyspark to execute a import python script.
+The python script creates internal hive tables from the csv files.
+The tables are permanently stored in the spark-warehouse.
+- Following python script can be used for the import of the csv files: [./scripts/spark_data_warehouse/create_dfs_and_database.py](create_dfs_and_database.py)
+     - This is only necessary the first time the data gets imported
+- Following python script can be used for the creation of dataframes from the tables after the import: [./scripts/spark_data_warehouse/load_dfs_from_warehouse.py](load_dfs_from_warehouse.py)
+     - This is can be used when returning to pyspark to load the data to dataframes making it easier to work with in pyspark
