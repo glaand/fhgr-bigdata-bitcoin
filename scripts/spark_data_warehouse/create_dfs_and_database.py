@@ -49,7 +49,7 @@ unspent.write.mode('overwrite').saveAsTable("unspent")
 balances.write.mode('overwrite').saveAsTable("balances")
 blocks.write.mode('overwrite').saveAsTable("blocks")
 transactions.write.mode('overwrite').saveAsTable("transactions")
-tx_out.write.mode('overwrite').saveAsTable("tx_out")
+tx_out.write.mode('overwrite').saveAsTable("tx_out_temp")
 tx_in.write.mode('overwrite').saveAsTable("tx_in")
   
 # read dfs from Hive tables (Can also be used after successful import to load data to df)
@@ -57,7 +57,7 @@ unspent_df=spark.read.table("unspent")
 balances_df=spark.read.table("balances")
 blocks_df=spark.read.table("blocks")
 transactions_df=spark.read.table("transactions")
-tx_out_df=spark.read.table("tx_out")
+tx_out_df=spark.read.table("tx_out_temp")
 tx_in_df=spark.read.table("tx_in")
 
 # Create unspent column directly in df (wont be saved in database)
@@ -78,5 +78,5 @@ tx_out_updated_df = tx_out_df.alias('o').join(
 )
 
 # save table permanent and load to df again
-tx_out_updated_df.write.mode('overwrite').saveAsTable("btc_blockchain.tx_out")
+tx_out_updated_df.write.mode('overwrite').saveAsTable("tx_out")
 tx_out_df=spark.read.table("tx_out")
