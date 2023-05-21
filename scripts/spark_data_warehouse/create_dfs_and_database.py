@@ -70,7 +70,7 @@ tx_out_updated_df = tx_out_df.alias('o').join(
 ).select(
     'o.txid',
     'o.indexOut',
-    'o.height',
+    #'o.height',  # maybe not needed because info not in csv
     'o.value',
     'o.scriptPubKey',
     'o.address',
