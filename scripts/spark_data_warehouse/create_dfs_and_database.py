@@ -57,13 +57,13 @@ unspent_df=spark.read.table("unspent")
 balances_df=spark.read.table("balances")
 blocks_df=spark.read.table("blocks")
 transactions_df=spark.read.table("transactions")
-tx_out_df=spark.read.table("tx_out_temp")
+tx_out_temp_df=spark.read.table("tx_out_temp")
 tx_in_df=spark.read.table("tx_in")
 
 # Create unspent column directly in df (wont be saved in database)
 # Join the 'tx_out' and 'tx_in' DataFrames based on the conditions
 
-tx_out_updated_df = tx_out_df.alias('o').join(
+tx_out_updated_df = tx_out_temp_df.alias('o').join(
     tx_in_df.alias('i'),
     (col('o.txid') == col('i.hashPrevOut')) & (col('o.indexOut') == col('i.indexPrevOut')),
     'left_outer'
