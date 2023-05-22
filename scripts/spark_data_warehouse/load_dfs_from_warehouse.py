@@ -25,5 +25,7 @@ blocks_df=spark.read.table("blocks")
 transactions_df=spark.read.table("transactions")
 tx_out_df=spark.read.table("tx_out")
 tx_in_df=spark.read.table("tx_in")
+hourly_prices_df=spark.read.table("hourly_prices")
+daily_prices_df=spark.read.table("daily_prices")
 
 # Have fun with dataframes
