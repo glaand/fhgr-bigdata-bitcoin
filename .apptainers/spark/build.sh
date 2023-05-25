@@ -10,4 +10,4 @@ export TMPDIR=$(pwd)/container/tmp
 apptainer build --force --fakeroot --nv --sandbox container/sandbox docker://apache/spark-py
 mkdir $(pwd)/container/sandbox/processed-data
 mkdir $(pwd)/containers/sandbox/reduced-data
-
+mkdir $(pwd)/containers/sandbox/btc_to_usd
