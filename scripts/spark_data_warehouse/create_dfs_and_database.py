@@ -19,14 +19,14 @@ spark = SparkSession \
     .getOrCreate()
 
 # paths
-block_range = "0-434984"
+block_range = "0-790000"
 
-unspent_file = f"/processed-data/rusty-dump/unspent-{block_range}.csv"
-balances_file = f"/processed-data/rusty-dump/balances-{block_range}.csv"
-blocks_file = f"/processed-data/rusty-dump/blocks-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
-transactions_file = f"/processed-data/rusty-dump/transactions-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
-tx_out_file = f"/processed-data/rusty-dump/tx_out-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
-tx_in_file = f"/processed-data/rusty-dump/tx_in-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+unspent_file = f"/processed-data-new/rusty-dump/unspent-{block_range}.csv"
+balances_file = f"/processed-data-new/rusty-dump/balances-{block_range}.csv"
+blocks_file = f"/processed-data-new/rusty-dump/blocks-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+transactions_file = f"/processed-data-new/rusty-dump/transactions-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+tx_out_file = f"/processed-data-new/rusty-dump/tx_out-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
+tx_in_file = f"/processed-data-new/rusty-dump/tx_in-{block_range}.csv"  # this files need to be generated with the provided shell script because the originial file doesent contain headers
 
 # check if files exist
 if os.path.exists(unspent_file) and os.path.exists(balances_file) and os.path.exists(blocks_file) and os.path.exists(transactions_file) and os.path.exists(tx_out_file) and os.path.exists(tx_in_file):
