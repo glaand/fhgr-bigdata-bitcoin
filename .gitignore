@@ -1,3 +1,6 @@
 nohup.out
 raw-data/
 mounted-data
+derby.log
+metastore_db/
+spark-warehouse/
