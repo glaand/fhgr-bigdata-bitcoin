@@ -20,7 +20,7 @@ hourly_transactions_value = spark.sql("""
         MONTH(hourly_prices.time), 
         DAY(hourly_prices.time), 
         HOUR(hourly_prices.time), 
-        MAX((hourly_prices.high+hourly_prices.low)/2) as price,
+        MAX((hourly_prices.high+hourly_prices.low)/2) as price
     FROM tx_out
     JOIN transactions ON transactions.txid = tx_out.txid
     JOIN blocks b ON b.hash = transactions.blockHash
