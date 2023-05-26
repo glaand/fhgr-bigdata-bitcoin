@@ -24,4 +24,5 @@ daily_transactions_value = spark.sql("""
     WHERE SUBSTRING(tx_out.script, 1, 2) = '6a'
     GROUP BY YEAR(blocks.ntime), MONTH(blocks.ntime), DAY(blocks.ntime)
 """)
+daily_transactions_value.show()
 daily_transactions_value.write.csv("/reduced_data/opreturn_transactions.csv")

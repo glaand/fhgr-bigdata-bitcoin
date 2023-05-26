@@ -31,4 +31,5 @@ hourly_transactions_value = spark.sql("""
         ON h.hour = HOUR(date_from_unix_date(b.ntime))
     GROUP BY transactions.txid, h.year, h.month, h.day, h.hour
 """)
+hourly_transactions_value.show()
 hourly_transactions_value.write.csv("/reduced_data/hourly_transactions_value.csv")
