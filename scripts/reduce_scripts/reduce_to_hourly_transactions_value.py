@@ -17,15 +17,15 @@ spark.sql("USE btc_blockchain")
 
 hourly_transactions_value = spark.sql("""
     SELECT 
-        SUM(tx_out.value), 
+        SUM(tx_out_temp.value), 
         transactions.txid, 
         YEAR(hourly_prices.time), 
         MONTH(hourly_prices.time), 
         DAY(hourly_prices.time), 
         HOUR(hourly_prices.time), 
         MAX((hourly_prices.high+hourly_prices.low)/2) as price
-    FROM tx_out
-    JOIN transactions ON transactions.txid = tx_out.txid
+    FROM tx_out_temp
+    JOIN transactions ON transactions.txid = tx_out_temp.txid
     JOIN blocks b ON b.hash = transactions.blockHash
     JOIN hourly_prices h 
         ON h.year = YEAR(date_from_unix_date(b.ntime))
