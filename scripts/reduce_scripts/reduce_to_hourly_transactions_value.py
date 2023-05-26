@@ -12,6 +12,9 @@ spark = SparkSession \
     .enableHiveSupport() \
     .getOrCreate()
 
+# select db
+spark.sql("USE btc_blockchain")
+
 hourly_transactions_value = spark.sql("""
     SELECT 
         SUM(tx_out.value), 

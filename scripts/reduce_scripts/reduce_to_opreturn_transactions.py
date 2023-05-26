@@ -12,6 +12,9 @@ spark = SparkSession \
     .enableHiveSupport() \
     .getOrCreate()
 
+# select db
+spark.sql("USE btc_blockchain")
+
 daily_transactions_value = spark.sql("""
     SELECT 
         COUNT(*),
