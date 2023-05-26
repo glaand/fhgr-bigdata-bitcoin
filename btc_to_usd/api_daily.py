@@ -56,8 +56,7 @@ if __name__ == "__main__":
         end_date=end_date-_2000_datapoints
     print("num of datapoints:", len(data))
     df = data_to_dataframe(data)
-    # remove emtpy rows
-    df.drop(df[df['high'] == 0].index, inplace=True)
+    # df.drop(df[df['high'] == 0].index, inplace=True)  # remove emtpy rows
     print("min date in df:", df.index.min())
     print("max date in df:", df.index.max())
     print("columns:", df.columns)
