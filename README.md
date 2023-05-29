@@ -80,5 +80,5 @@ The python script creates internal hive tables from the csv files.
 The tables are permanently stored in the spark-warehouse.
 - Following python script can be used for the import of the csv files: [create_dfs_and_database.py](./scripts/spark_data_warehouse/create_dfs_and_database.py)
      - This is only necessary the first time the data gets imported
-- Following python script can be used for the creation of dataframes from the tables after the import: [load_dfs_from_warehouse.py](./scripts/spark_data_warehouse/load_dfs_from_warehouse.py)
+- Following python script can be used for the creation of dataframes from the tables after the import: [load_dfs_from_warehouse.py](./scripts/spark_data_warehouse/load_dfs_from_warehouse.py) & [create_btc_prices_tables.py](./scripts/spark_data_warehouse/create_btc_prices_tables.py)
      - This is can be used when returning to pyspark to load the data to dataframes making it easier to work with in pyspark
