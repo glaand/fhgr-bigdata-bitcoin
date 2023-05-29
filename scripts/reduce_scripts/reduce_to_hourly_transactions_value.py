@@ -18,21 +18,19 @@ spark.sql("USE btc_blockchain")
 hourly_transactions_value = spark.sql("""
     SELECT 
         SUM(tx_out_temp.value), 
-        transactions.txid, 
-        YEAR(hourly_prices.time), 
-        MONTH(hourly_prices.time), 
-        DAY(hourly_prices.time), 
-        HOUR(hourly_prices.time), 
-        MAX((hourly_prices.high+hourly_prices.low)/2) as price
+        h.year, 
+        h.month, 
+        h.day, 
+        h.hour, 
+        MAX(h.avg)
     FROM tx_out_temp
     JOIN transactions ON transactions.txid = tx_out_temp.txid
-    JOIN blocks b ON b.hash = transactions.blockHash
+    JOIN blocks b ON b.hash = transactions.hashBlock
     JOIN hourly_prices h 
-        ON h.year = YEAR(date_from_unix_date(b.ntime))
-        ON h.month = MONTH(date_from_unix_date(b.ntime))
-        ON h.day = DAY(date_from_unix_date(b.ntime))
-        ON h.hour = HOUR(date_from_unix_date(b.ntime))
-    GROUP BY transactions.txid, h.year, h.month, h.day, h.hour
+        ON h.year = b.year
+        AND h.month = b.month
+        AND h.day = b.day
+        AND h.hour = b.hour
+    GROUP BY h.year, h.month, h.day, h.hour
 """)
-hourly_transactions_value.show()
-hourly_transactions_value.write.csv("/reduced_data/hourly_transactions_value.csv")
+hourly_transactions_value.write.csv("/reduced-data/hourly_transactions_value.csv")

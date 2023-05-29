@@ -1,0 +1,5 @@
+sed -i.bak 1i"block_hash;height;version;blocksize;hashPrev;hashMerkleRoot;nTime;nBits;nNonce" blocks-0-790000.csv
+sed -i.bak 1i"txid;hashBlock;version;lockTime" transactions-0-790000.csv
+sed -i.bak 1i"txid;hashPrevOut;indexPrevOut;scriptSig;sequence" tx_in-0-790000.csv
+sed -i.bak 1i"txid;indexOut;value;scriptPubKey;address" tx_out-0-790000.csv
+echo "adding headers done.."

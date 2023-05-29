@@ -34,6 +34,11 @@ def data_to_dataframe(data):
 
     # time is stored as an epoch, we need normal dates
     df['time'] = pd.to_datetime(df['time'], unit='s')
+    df['year'] = df['time'].dt.year
+    df['month'] = df['time'].dt.month
+    df['day'] = df['time'].dt.day
+    df['hour'] = df['time'].dt.hour
+    df['avg'] = df[['high', 'low']].mean(axis=1)
     df.sort_values(by='time', inplace=True)
     df.set_index('time', inplace=True)
     df = df.drop(columns=["conversionType", "conversionSymbol"])

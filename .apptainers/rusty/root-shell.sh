@@ -15,3 +15,4 @@ apptainer shell  \
 	--mount type=bind,source=$PROCESSED_DATA,dst=/processed-data \
 	--mount type=bind,source=/scratch,dst=/scratch \
 	container/sandbox rusty
+	
